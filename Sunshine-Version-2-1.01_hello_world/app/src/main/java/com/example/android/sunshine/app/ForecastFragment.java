@@ -56,7 +56,7 @@ public class ForecastFragment extends Fragment {
         forecastData.add("Wednesday - Cloudy - 55/46");
         forecastData.add("Thursday - Cloudy - 44/32");
         forecastData.add("Friday - Rainy - 77/50");
-        forecastData.add("Saturday - Sunny - 66/58");
+        forecastData.add("Saturday - Fake Data - 66/58");
         forecastData.add("Sunday - Rainy - 69/60");
 
         arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forcast, R.id.list_item_forecast_textview, forecastData);
