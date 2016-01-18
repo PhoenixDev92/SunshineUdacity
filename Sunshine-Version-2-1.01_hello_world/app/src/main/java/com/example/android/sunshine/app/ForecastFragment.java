@@ -50,7 +50,7 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ArrayList<String> forecastData = new ArrayList<String>();
+        ArrayList<String> forecastData = new ArrayList<>();
         forecastData.add("Today - Sunny - 88/63");
         forecastData.add("Tomorrow - Sunny - 100/78");
         forecastData.add("Wednesday - Cloudy - 55/46");
