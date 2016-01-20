@@ -132,15 +132,17 @@ public class TestDb extends AndroidTestCase {
         Cursor cursor = db.rawQuery("SELECT * FROM " + WeatherContract.LocationEntry.TABLE_NAME, null);
 
         // Move the cursor to a valid database row
-        cursor.moveToFirst();
+        assertTrue("Error: No records match query", cursor.moveToFirst());
 
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
         TestUtilities.validateCurrentRecord("Retrieved Row did not match insertion", cursor, testValues);
+        assertFalse("Error: More than one record in result", cursor.moveToNext());
 
         // Finally, close the cursor and database
         cursor.close();
+        db.close();
     }
 
     /*
