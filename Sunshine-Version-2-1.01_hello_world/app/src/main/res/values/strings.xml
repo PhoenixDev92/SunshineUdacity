@@ -27,5 +27,7 @@
         <item>imperial</item>
     </array>
     <string name="pref_units_dialog_title">Select Preferred Units</string>
+    <string name="pref_units_imperial">imperial</string>
+    <string name="pref_units_metric">metric</string>
 
 </resources>
