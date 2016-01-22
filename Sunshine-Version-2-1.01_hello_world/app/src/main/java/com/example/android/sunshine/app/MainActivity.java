@@ -17,6 +17,7 @@ public class MainActivity extends ActionBarActivity {
     private final String FORECASTFRAGMENT_TAG = "FORECAST_FRAGMENT";
 
     private String mLocation;
+    private boolean isMetric;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         mLocation = Utility.getPreferredLocation(this);
+        isMetric = Utility.isMetric(this);
 
         Log.d("Lifecycle", "Created");
     }
@@ -61,6 +63,12 @@ public class MainActivity extends ActionBarActivity {
             ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
             forecastFragment.onLocationChanged();
             mLocation = Utility.getPreferredLocation(this);
+        }
+
+        if (isMetric != Utility.isMetric(this)) {
+            ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            forecastFragment.onUnitsChanged();
+            isMetric = Utility.isMetric(this);
         }
     }
 

@@ -123,6 +123,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
+    public void onUnitsChanged() {
+        updateWeather();
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String locationSetting = Utility.getPreferredLocation(getActivity());
