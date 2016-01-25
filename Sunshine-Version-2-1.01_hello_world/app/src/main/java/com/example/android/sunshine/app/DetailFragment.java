@@ -3,6 +3,7 @@ package com.example.android.sunshine.app;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -75,8 +76,28 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView dayTextView, dateTextView, maxTextView, minTextView, humidityTextView, windTextView, pressureTextView, forecastTextView;
     private ImageView iconView;
 
+    private Uri mUri;
+
     public DetailFragment() {
         setHasOptionsMenu(true);
+    }
+
+    public static DetailFragment newInstance(Uri dateUri) {
+        DetailFragment df = new DetailFragment();
+
+        Bundle args = new Bundle();
+        args.putString("uri", dateUri.toString());
+        df.setArguments(args);
+
+        return df;
+    }
+
+    public Uri getParsedUri (){
+        if (getArguments() != null) {
+            return Uri.parse(getArguments().getString("uri", null));
+        }
+
+        return null;
     }
 
     @Override
@@ -130,16 +151,31 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return shareIntent;
     }
 
+    void onLocationChanged( String newLocation ) {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if (uri != null) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
+    }
+
+    void onUnitsChanged(){
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
+        mUri = getParsedUri();
 
-        if (intent == null) {
+        if (mUri == null){
             return null;
         }
 
         return new CursorLoader(getActivity(),
-                intent.getData(),
+                mUri,
                 FORECAST_COLUMNS,
                 null,
                 null,
@@ -154,6 +190,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         Context context = getActivity();
         boolean isMetric = Utility.isMetric(context);
+
+        iconView.setImageResource(Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID)));
 
         dayTextView.setText(Utility.getDayName(context, data.getLong(COL_WEATHER_DATE)));
         dateTextView.setText(Utility.getFormattedMonthDay(context, data.getLong(COL_WEATHER_DATE)));

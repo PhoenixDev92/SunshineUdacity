@@ -49,6 +49,7 @@ public class ForecastAdapter extends CursorAdapter {
 
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_FUTURE_DAY = 1;
+    private boolean mUseTodayViewType = true;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -77,9 +78,13 @@ public class ForecastAdapter extends CursorAdapter {
                 " - " + highAndLow;
     }
 
+    public void setmUseTodayViewType (boolean useTodayViewType){
+        mUseTodayViewType = useTodayViewType;
+    }
+
     @Override
     public int getItemViewType(int position) {
-        return(position == 0) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return ((position == 0) && (mUseTodayViewType == true)) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     @Override
@@ -102,7 +107,7 @@ public class ForecastAdapter extends CursorAdapter {
         }
 
         View view = LayoutInflater.from(context).inflate(layoutID, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view, viewType);
         view.setTag(viewHolder);
 
         return view;
@@ -118,14 +123,15 @@ public class ForecastAdapter extends CursorAdapter {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        // Use placeholder image for now
-        ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-        viewHolder.iconView.setImageResource(R.drawable.ic_launcher);
+        if (viewHolder.viewType == VIEW_TYPE_TODAY) {
+            viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(cursor.getInt(COL_WEATHER_CONDITION_ID)));
+        } else {
+            viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(cursor.getInt(COL_WEATHER_CONDITION_ID)));
+        }
 
         // TODO Read date from cursor
-       String date = Utility.getFriendlyDayString(context, cursor.getLong(COL_WEATHER_DATE));
-       //String date = Utility.formatDate(cursor.getLong(COL_WEATHER_DATE));
-       viewHolder.dateView.setText(date);
+        String date = Utility.getFriendlyDayString(context, cursor.getLong(COL_WEATHER_DATE));
+        viewHolder.dateView.setText(date);
 
         // TODO Read weather forecast from cursor
         String description = cursor.getString(COL_WEATHER_DESC);
@@ -144,13 +150,16 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     public static class ViewHolder {
-        public static ImageView iconView;
-        public static TextView dateView;
-        public static TextView descriptionView;
-        public static TextView highView;
-        public static TextView lowView;
+        private final ImageView iconView;
+        private final TextView dateView;
+        private final TextView descriptionView;
+        private final TextView highView;
+        private final TextView lowView;
+        private final int viewType;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view, int viewType_){
+            viewType = viewType_;
+
             iconView = (ImageView) view.findViewById(R.id.list_item_icon);
             dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
             descriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);

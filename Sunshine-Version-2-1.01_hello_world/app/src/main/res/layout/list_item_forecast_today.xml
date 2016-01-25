@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
+    android:background="@drawable/today_touch_selector"
     android:padding="16dp">
 
     <LinearLayout
@@ -17,19 +18,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today, 22 January"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/text_white"
             android:id="@+id/list_item_date_textview" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="37"
+            android:textSize="72sp"
+            android:fontFamily="san-serif-light"
+            android:textColor="@color/text_white"
             android:id="@+id/list_item_high_textview" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30"
+            android:textSize="36sp"
+            android:fontFamily="san-serif-light"
+            android:textColor="@color/text_white"
             android:id="@+id/list_item_low_textview" />
     </LinearLayout>
 
@@ -41,15 +48,16 @@
         android:layout_weight="1">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/list_item_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/text_white"
             android:id="@+id/list_item_forecast_textview" />
     </LinearLayout>
 </LinearLayout>
